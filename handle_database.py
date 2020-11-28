@@ -11,22 +11,12 @@ class DatabaseController:
         self.coll = self.db[collection_name]
 
     def create_collection(self):
+        print('Creating collection')
         self.db.create_collection(self.coll_nm)
 
     def drop_collection(self):
+        print('Deleting collection')
         self.coll.drop()
-
-# cluster = MongoClient(MONGODB_CONN)
-# db = cluster['vip_parser']
-
-# Create collection
-# db.create_collection('ct_data_live')
-
-#collection = db['ct_data_live']
-
-# Drop collection
-# print('Dropping . . .')
-# collection.drop()
 
 
 if __name__ == "__main__":
