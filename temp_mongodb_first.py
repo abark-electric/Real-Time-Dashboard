@@ -109,7 +109,7 @@ def find_dup(lst):
         uniqItems = {}
         for x in lst:
             if x not in uniqItems:
-                uniqItems[x] = 1
+                uniqItems[x] = 12
             else:
                 if uniqItems[x] == 1:
                     dupItems.append(x)
