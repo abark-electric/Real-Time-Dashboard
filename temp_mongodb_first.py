@@ -25,7 +25,7 @@ app.layout = html.Div([
     dcc.Graph(id='live-graph', animate=True),
     dcc.Interval(
         id='graph-update',
-        interval=1000
+        interval=2000
     )
 ])
 
@@ -35,18 +35,19 @@ app.layout = html.Div([
 def update_graph():
 
     #print(resume_token)
-
+    global count
     global token_holder
     global token_holderx
-    find_dup(token_holderx)
-    print(token_holderx)
+    # find_dup(token_holderx)
+    # (token_holderx)
     global X
     global Y
     global client
     global resume_token
-    if resume_token is "NEW":
+    if resume_token is "NEW" and count != 1:
         with client.changestream.collection.watch() as stream:
             for insert_change in stream:
+
 
                 resume_token = stream.resume_token
 
@@ -54,26 +55,30 @@ def update_graph():
                 # print(change['fullDocument']['hello'])
 
                 # print('Working 4')
-                print('')  # for readability only
+                print('IF')  # for readability only
+                print(' ')  # for readability only
+                count += 1
 
                 if resume_token not in token_holder:
+                    print(f"DOC: {type(insert_change['fullDocument']['hello'])}")
                     X.append(X[-1] + 1)
-                    Y.append(insert_change['fullDocument']['hello'])
+                    Y.append(int(insert_change['fullDocument']['hello']))
                     # print(insert_change['fullDocument']['hello'])
-                    # print(X)
-                    # print(Y)
+                    print(X)
+                    print(Y)
+                    print(find_dup(list(Y)))
 
 
-                    data = graph_objs.Scatter(
-                        x=list(X),
-                        y=list(Y),
-                        name='Scatter',
-                        mode='markers'
-                    )
+                    # data = graph_objs.Scatter(
+                    #     x=list(X),
+                    #     y=list(Y),
+                    #     name='Scatter',
+                    #     mode='markers'
+                    # )
                     token_holder.append(resume_token)
                     token_holderx.append(resume_token['_data'])
-                    return {'data': [data], 'layout': graph_objs.Layout(xaxis=dict(range=[min(X), max(X)]),
-                                                                        yaxis=dict(range=[min(Y), max(Y)]))}
+                    # return {'data': [data], 'layout': graph_objs.Layout(xaxis=dict(range=[min(X), max(X)]),
+                    #                                                     yaxis=dict(range=[min(Y), max(Y)]))}
     else:
         with client.changestream.collection.watch(resume_after=resume_token) as stream:
             for insert_change in stream:
@@ -84,13 +89,16 @@ def update_graph():
                 # print(change['fullDocument']['hello'])
 
                 # print('Working 4')
-                # print('')  # for readability only
+                print('ELSE')  # for readability only
+                print(' ')  # for readability only
                 if resume_token not in token_holder:
+                    print(f"DOC: {type(insert_change['fullDocument']['hello'])}")
                     X.append(X[-1] + 1)
                     Y.append(insert_change['fullDocument']['hello'])
                     # print(insert_change['fullDocument']['hello'])
-                    # print(X)
-                    # print(Y)
+                    print(X)
+                    print(Y)
+                    print(find_dup(list(Y)))
 
                     data = graph_objs.Scatter(
                         x=list(X),
